@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: tradewise-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: tradewise_db
+      MYSQL_USER: tradewise_user
+      MYSQL_PASSWORD: tradewise_password
+    ports:
+      -  "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tradewise-network
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  tradewise-network:
+    driver: bridge
